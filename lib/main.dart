@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kiuno_example/layout_basic.dart';
-import 'package:flutter_kiuno_example/layout_ex1.dart';
-import 'package:flutter_kiuno_example/layout_ex2.dart';
-import 'package:flutter_kiuno_example/layout_ex3.dart';
-import 'package:flutter_kiuno_example/stateful_basic.dart';
-import 'package:flutter_kiuno_example/stateful_encapsulation.dart';
+import 'package:flutter_kiuno_example/layout/layout_basic.dart';
+import 'package:flutter_kiuno_example/layout/layout_ex1.dart';
+import 'package:flutter_kiuno_example/layout/layout_ex2.dart';
+import 'package:flutter_kiuno_example/layout/layout_ex3.dart';
+import 'package:flutter_kiuno_example/state/stateful_basic.dart';
+import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
+import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 
-import 'lifecycle.dart';
-import 'list.dart';
+import 'lifecycle/lifecycle.dart';
+import 'layout/list.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           "stateful_basic_page":(context) => StatefulBasicRoute(),
           "stateful_encapsulation_page":(context) => StatefulEncapsulationRoute(),
           "list_page":(context) => ListRoute(),
+          "numbers_game_bloc_page":(context) => NumbersGameBlocRoute(),
           "/":(context) => MyHomeRoute(),
         },
     );
@@ -49,6 +51,7 @@ class MyHomeRoute extends StatelessWidget {
           _buildNavigationButtonByRouteName(context, 'Stateful basic', "stateful_basic_page"),
           _buildNavigationButtonByRouteName(context, 'Stateful encapsulation', "stateful_encapsulation_page"),
           _buildNavigationButtonByRouteName(context, 'List', "list_page"),
+          _buildNavigationButtonByRouteName(context, 'Numbers game bloc', "numbers_game_bloc_page"),
 
           // _buildNavigationButton(context, 'Lifecycle', LifecycleRoute()),
           // _buildNavigationButton(context, 'Layout basic', LayoutBasicRoute()),
@@ -58,6 +61,7 @@ class MyHomeRoute extends StatelessWidget {
           // _buildNavigationButton(context, 'Stateful basic', StatefulBasicRoute()),
           // _buildNavigationButton(context, 'Stateful encapsulation', StatefulEncapsulationRoute()),
           // _buildNavigationButton(context, 'List', ListRoute()),
+          // _buildNavigationButton(context, 'Numbers game bloc', NumbersGameBlocRoute()),
         ],
       ),
     );
