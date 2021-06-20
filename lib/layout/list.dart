@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kiuno_example/base.dart';
 
-class ListRoute extends StatelessWidget {
+class ListRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup List',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, "$args return");
-            },
-          ),
-          title: Text('Kiuno\'s list'),
-        ),
-        body: ShoppingList(
-          products: <Product>[
-            Product(name: 'Eggs'),
-            Product(name: 'Flour'),
-            Product(name: 'Chocolate chips'),
-          ],
-        ),
+    return buildMaterialApp(
+      context,
+      'Startup List',
+      'Kiuno\'s list',
+      ShoppingList(
+        products: <Product>[
+          Product(name: 'Eggs'),
+          Product(name: 'Flour'),
+          Product(name: 'Chocolate chips'),
+        ],
       ),
     );
   }
 }
 
 class Product {
-  Product({this.name});
+  Product({required this.name});
   final String name;
   bool inCart = false;
 }
@@ -37,7 +28,7 @@ class Product {
 typedef CartChangedCallback(Product product, bool inCart);
 
 class ShoppingList extends StatefulWidget {
-  ShoppingList({key, this.products}) : super(key: key);
+  ShoppingList({key, required this.products}) : super(key: key);
 
   final List<Product> products;
 
@@ -68,7 +59,7 @@ class _ShoppingState extends State<ShoppingList> {
 }
 
 class _ShoppingItem extends StatelessWidget {
-  _ShoppingItem({this.product, this.inCart, this.onCartChanged})
+  _ShoppingItem({required this.product, required this.inCart, required this.onCartChanged})
       : super(key: ObjectKey(product));
 
   final Product product;
@@ -79,7 +70,7 @@ class _ShoppingItem extends StatelessWidget {
     return inCart ? Colors.black54 : Theme.of(context).primaryColor;
   }
 
-  TextStyle _getTextStyle(BuildContext context) {
+  TextStyle? _getTextStyle(BuildContext context) {
     return inCart
         ? TextStyle(
             color: Colors.black54,

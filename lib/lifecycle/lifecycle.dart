@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_kiuno_example/base.dart';
 
-class LifecycleRoute extends StatelessWidget {
+class LifecycleRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup Lifecycle',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context, "$args return"); },),
-          title: Text('Kiuno\'s lifecycle'),
-        ),
-        body: _Lifecycle(),
-      ),
+    return buildMaterialApp(
+      context,
+      'Startup Lifecycle',
+      'Kiuno\'s lifecycle',
+      _Lifecycle(),
     );
   }
 }
@@ -28,16 +24,16 @@ class _LifecycleState extends State<_Lifecycle> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
-  AppLifecycleState _notification;
+  late AppLifecycleState _notification;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

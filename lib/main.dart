@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_kiuno_example/bloc/numbers_bloc.dart';
 import 'package:flutter_kiuno_example/layout/layout_basic.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex1.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex2.dart';
@@ -7,10 +9,13 @@ import 'package:flutter_kiuno_example/state/stateful_basic.dart';
 import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 
+import 'global_bloc_observer.dart';
 import 'lifecycle/lifecycle.dart';
 import 'layout/list.dart';
 
 void main() {
+  Bloc.observer = GlobalBlocObserver(); // Register GlobalBlocObserver
+  // Bloc.observer = BlocObserver() // Unregister GlobalBlocObserver
   runApp(MyApp());
 }
 

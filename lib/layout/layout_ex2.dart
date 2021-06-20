@@ -1,29 +1,25 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_kiuno_example/base.dart';
 
-class LayoutExample2Route extends StatelessWidget {
+class LayoutExample2Route extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup Layout Example2',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context, "$args return"); },),
-          title: Text('Kiuno\'s layout example2'),
-        ),
-        body: LayoutExample2(),
-      ),
+    return buildMaterialApp(
+      context,
+      'Startup Layout Example2',
+      'Kiuno\'s layout example2',
+      LayoutExample2Widget(),
     );
   }
 }
 
-class LayoutExample2 extends StatefulWidget {
+class LayoutExample2Widget extends StatefulWidget {
   @override
   _LayoutExample2State createState() => _LayoutExample2State();
 }
 
-class _LayoutExample2State extends State<LayoutExample2> {
+class _LayoutExample2State extends State<LayoutExample2Widget> {
   @override
   void initState() {
     super.initState();

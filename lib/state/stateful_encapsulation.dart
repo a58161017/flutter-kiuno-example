@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kiuno_example/base.dart';
 
 /*
-Decide which Widgets the state belongs to:
-(1) If the state is user data, such as the selected state of a check box and
-    the position of a slider, the state is best managed by the parent Widget.
-(2) If the state is related to the appearance of the interface, such as color
-    and animation, the state is best managed by the Widget itself.
-(3) If a certain state is shared by different Widgets, it is better to be
-    managed by their common parent Widget.
+ * Decide which Widgets the state belongs to:
+ * (1) If the state is user data, such as the selected state of a check box and
+ *     the position of a slider, the state is best managed by the parent Widget.
+ * (2) If the state is related to the appearance of the interface, such as color
+ *     and animation, the state is best managed by the Widget itself.
+ * (3) If a certain state is shared by different Widgets, it is better to be
+ *     managed by their common parent Widget.
 */
-class StatefulEncapsulationRoute extends StatelessWidget {
+class StatefulEncapsulationRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup Stateful Encapsulation',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, "$args return");
-            },
-          ),
-          title: Text('Kiuno\'s stateful encapsulation'),
-        ),
-        body: _Counter(),
-      ),
+    return buildMaterialApp(
+      context,
+      'Startup Stateful Encapsulation',
+      'Kiuno\'s stateful encapsulation',
+      _Counter(),
     );
   }
 }
@@ -70,7 +61,7 @@ class _CounterState extends State<_Counter> {
 
 // The count state is already managed by the parent widget _Counter, so this widget can be stateless.
 class _CounterDisplay extends StatelessWidget {
-  _CounterDisplay({@required this.count});
+  _CounterDisplay({required this.count});
 
   final int count;
 
@@ -82,7 +73,7 @@ class _CounterDisplay extends StatelessWidget {
 
 // The count state is already managed by the parent widget _Counter, so this widget can be stateless.
 class _CounterIncreasementor extends StatefulWidget {
-  _CounterIncreasementor({@required this.count, @required this.onPressed});
+  _CounterIncreasementor({required this.count, required this.onPressed});
 
   final int count;
   final VoidCallback onPressed;

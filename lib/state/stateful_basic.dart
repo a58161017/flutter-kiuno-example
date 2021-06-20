@@ -1,19 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_kiuno_example/base.dart';
 
-class StatefulBasicRoute extends StatelessWidget {
+class StatefulBasicRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup Stateful Basic',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context, "$args return"); },),
-          title: Text('Kiuno\'s stateful basic'),
-        ),
-        body: _Counter(),
-      ),
+    return buildMaterialApp(
+      context,
+      'Startup Stateful Basic',
+      'Kiuno\'s stateful basic',
+      _Counter(),
     );
   }
 }

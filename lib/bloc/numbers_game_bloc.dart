@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_kiuno_example/base.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_bloc.dart';
 
-class NumbersGameBlocRoute extends StatelessWidget {
+class NumbersGameBlocRoute extends BaseRoute {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: 'Startup Numbers Game Bloc',
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, "$args return");
-            },
-          ),
-          title: Text('Kiuno\'s numbers game bloc'),
-        ),
-        body: _NumbersGameWidget(),
-      ),
+    return buildMaterialApp(
+      context,
+      'Startup Numbers Game Bloc',
+      'Kiuno\'s numbers game bloc',
+      _NumbersGameWidget(),
     );
   }
 }
@@ -34,6 +25,11 @@ class _NumbersGameState extends State<_NumbersGameWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      /*
+       * By default, BlocProvider will create the bloc lazily, meaning create will
+       * get executed when the bloc is looked up via BlocProvider.of<BlocA>(context).
+       */
+      // lazy: false,
       create: (BuildContext context) => NumbersBloc(),
       child: _NumbersGameView(),
     );
@@ -49,13 +45,23 @@ class _NumbersGameView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         BlocBuilder<NumbersBloc, NumbersState>(
+          /*
+           * The buildWhen is executed before the builder, and it determines
+           * whether the builder needs to be executed by returning true/false.
+           */
+          // buildWhen: (previousState, state) {
+          //   return true;
+          // },
+
           builder: (context, state) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildNumberText('${state.minValue}'),
                 _buildNumberText('<='),
-                _buildNumberText(state.state == MessageState.completeGame ? '${state.guessValue}' : '?'),
+                _buildNumberText(state.status == MessageStatus.completeGame
+                    ? '${state.guessValue}'
+                    : '?'),
                 _buildNumberText('<='),
                 _buildNumberText('${state.maxValue}'),
               ],
@@ -81,10 +87,11 @@ class _NumbersGameView extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8),
                   child: ElevatedButton(
-                      onPressed: () => context
-                          .read<NumbersBloc>()
-                          .add(SubmitEvent(submitValue: myController.text.isEmpty? -1 : int.parse(myController.text))),
-                      child: Text('Submit',)),
+                      onPressed: () => context.read<NumbersBloc>().add(
+                          SubmitEvent(myController.text.isEmpty ? -1 : int.parse(myController.text))),
+                      child: Text(
+                        'Submit',
+                      )),
                 ),
               ],
             ),
@@ -92,7 +99,8 @@ class _NumbersGameView extends StatelessWidget {
               builder: (context, state) {
                 return Padding(
                   padding: EdgeInsets.fromLTRB(32, 8, 32, 8),
-                  child: Text(getMessage(state), style: TextStyle(color: Colors.red)),
+                  child: Text(getMessage(state),
+                      style: TextStyle(color: Colors.red)),
                 );
               },
             ),
@@ -106,20 +114,23 @@ class _NumbersGameView extends StatelessWidget {
   }
 
   Widget _buildNumberText(String content) {
-    return Text(content, style: TextStyle(fontSize: 50),);
+    return Text(
+      content,
+      style: TextStyle(fontSize: 50),
+    );
   }
 
   String getMessage(NumbersState state) {
-    switch(state.state) {
-      case MessageState.none:
+    switch (state.status) {
+      case MessageStatus.none:
         return '';
-      case MessageState.guess:
-        return 'The number you just guessed is ${state.inputValue}.';
-      case MessageState.rangeOut:
+      case MessageStatus.guess:
+        return 'The number you just guessed is ${state is NumbersInProgress ? state.inputValue : '#error'}.';
+      case MessageStatus.rangeOut:
         return 'The input is out of range.';
-      case MessageState.inputError:
+      case MessageStatus.inputError:
         return 'There is a problem with the entered value.';
-      case MessageState.completeGame:
+      case MessageStatus.completeGame:
         return 'Congratulations on guessed at ${state.guessTimes} times.';
       default:
         return '';

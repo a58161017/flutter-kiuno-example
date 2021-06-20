@@ -1,6 +1,6 @@
 part of 'numbers_bloc.dart';
 
-enum MessageState {
+enum MessageStatus {
   none,
   guess,
   rangeOut,
@@ -8,34 +8,66 @@ enum MessageState {
   completeGame,
 }
 
-@immutable
-abstract class NumbersState {
-  MessageState state = MessageState.none;
-  int minValue = 0;
-  int maxValue = 100;
-  int guessValue = Random().nextInt(101);
-  int inputValue = -1;
-  int guessTimes = 0;
+class NumbersState extends Equatable {
+  late MessageStatus status;
+  int minValue;
+  int maxValue;
+  int guessValue;
+  int guessTimes;
 
-  void initValues() {
-    state = MessageState.none;
-    minValue = 0;
-    maxValue = 100;
-    guessValue = Random().nextInt(101);
-    inputValue = -1;
-    guessTimes = 0;
+  NumbersState({
+    this.status = MessageStatus.none,
+    this.minValue = 0,
+    this.maxValue = 100,
+    this.guessValue = 50,
+    this.guessTimes = 0,
+  });
+
+  @override
+  String toString() {
+    return '''$runtimeType { status: $status, minValue: $minValue, maxValue: $maxValue, guessValue: $guessValue, guessTimes: $guessTimes }''';
   }
 
-  NumbersInitial getNewState() {
-    NumbersInitial newState = NumbersInitial();
-    newState.state = state;
+  NumbersState copyWith({
+    MessageStatus? status,
+    int? minValue,
+    int? maxValue,
+    int? guessValue,
+    int? guessTimes,
+  }) {
+    return NumbersState(
+      status: status ?? this.status,
+      minValue: minValue ?? this.minValue,
+      maxValue: maxValue ?? this.maxValue,
+      guessValue: guessValue ?? this.guessValue,
+      guessTimes: guessTimes ?? this.guessTimes,
+    );
+  }
+
+  NumbersState clone(NumbersState newState) {
+    newState.status = status;
     newState.minValue = minValue;
     newState.maxValue = maxValue;
     newState.guessValue = guessValue;
-    newState.inputValue = inputValue;
     newState.guessTimes = guessTimes;
     return newState;
   }
+
+  @override
+  List<Object?> get props => [status, minValue, maxValue, guessValue, guessTimes];
 }
 
-class NumbersInitial extends NumbersState {}
+class NumbersInitial extends NumbersState {
+  NumbersInitial() {
+    status = MessageStatus.none;
+    minValue = 0;
+    maxValue = 100;
+    guessValue = Random().nextInt(101);
+    guessTimes = 0;
+  }
+}
+class NumbersInProgress extends NumbersState {
+  int inputValue;
+  NumbersInProgress(this.inputValue);
+}
+class NumbersSuccess extends NumbersState {}

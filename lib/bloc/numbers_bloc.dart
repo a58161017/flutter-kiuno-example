@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 
 part 'numbers_event.dart';
 part 'numbers_state.dart';
@@ -11,44 +12,70 @@ part 'numbers_state.dart';
 class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc() : super(NumbersInitial());
 
+  // onEvent() -> S -> onTransition() -> onChange()
+
+  @override
+  void onEvent(NumbersEvent event) {
+    debugPrint('[NumbersBloc].onEvent() => ${event.runtimeType}');
+    super.onEvent(event);
+  }
+
   @override
   Stream<NumbersState> mapEventToState(
     NumbersEvent event,
   ) async* {
-    debugPrint('${event.runtimeType} is trigger, '
-        'state:${state.state} '
-        'minValue:${state.minValue} '
-        'maxValue:${state.maxValue} '
-        'guessValue:${state.guessValue} '
-        'inputValue:${state.inputValue} '
-        'guessTimes:${state.guessTimes}');
+    debugPrint('[NumbersBloc].mapEventToState() => ${state.toString()}');
+    NumbersState returnState = state;
     if (event is SubmitEvent) {
-      if (state.state != MessageState.completeGame) {
+      if (state.status != MessageStatus.completeGame) {
+        NumbersInProgress newState = state.clone(NumbersInProgress(event.submitValue)) as NumbersInProgress;
         int sValue = event.submitValue; // submit value
         int gValue = state.guessValue; // guess value
 
         // Check error
         if (sValue == -1) {
-          state.state = MessageState.inputError;
+          newState.status = MessageStatus.inputError;
         } else if (sValue < state.minValue || sValue > state.maxValue) {
-          state.state = MessageState.rangeOut;
+          newState.status = MessageStatus.rangeOut;
         } else {
-          state.guessTimes++;
-          state.inputValue = sValue;
+          newState.guessTimes++;
+          newState.inputValue = sValue;
           if (sValue == gValue) {
-            state.state = MessageState.completeGame;
+            newState.status = MessageStatus.completeGame;
           } else if (sValue > gValue) {
-            state.maxValue = event.submitValue;
-            state.state = MessageState.guess;
+            newState.maxValue = event.submitValue;
+            newState.status = MessageStatus.guess;
           } else if (sValue < gValue) {
-            state.minValue = event.submitValue;
-            state.state = MessageState.guess;
+            newState.minValue = event.submitValue;
+            newState.status = MessageStatus.guess;
           }
         }
+        returnState = newState;
       }
     } else if (event is ResetEvent) {
-      state.initValues();
+      returnState = state.clone(NumbersInitial());
     }
-    yield state.getNewState();
+    // New status objects are needed, and the layout will be notified to update.
+    yield returnState;
+  }
+
+  // ex. Transition { currentState: Instance of 'NumbersInitial', event: Instance of 'SubmitEvent', nextState: Instance of 'NumbersInitial' }
+  @override
+  void onTransition(Transition<NumbersEvent, NumbersState> transition) {
+    debugPrint('[NumbersBloc].onTransition() => $transition');
+    super.onTransition(transition);
+  }
+
+  // ex. Change { currentState: Instance of 'NumbersInitial', nextState: Instance of 'NumbersInitial' }
+  @override
+  void onChange(Change<NumbersState> change) {
+    debugPrint('[NumbersBloc].onChange() => $change');
+    super.onChange(change);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    debugPrint('[NumbersBloc].onError() => $error, $stackTrace');
+    super.onError(error, stackTrace);
   }
 }
