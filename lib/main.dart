@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_bloc.dart';
+import 'package:flutter_kiuno_example/cubit/calculator_route.dart';
 import 'package:flutter_kiuno_example/layout/layout_basic.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex1.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex2.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           "stateful_encapsulation_page":(context) => StatefulEncapsulationRoute(),
           "list_page":(context) => ListRoute(),
           "numbers_game_bloc_page":(context) => NumbersGameBlocRoute(),
+          "calculator_cubit_page":(context) => CalculatorCubitRoute(),
           "/":(context) => MyHomeRoute(),
         },
     );
@@ -57,6 +59,7 @@ class MyHomeRoute extends StatelessWidget {
           _buildNavigationButtonByRouteName(context, 'Stateful encapsulation', "stateful_encapsulation_page"),
           _buildNavigationButtonByRouteName(context, 'List', "list_page"),
           _buildNavigationButtonByRouteName(context, 'Numbers game bloc', "numbers_game_bloc_page"),
+          _buildNavigationButtonByRouteName(context, 'Calculator cubit', "calculator_cubit_page"),
 
           // _buildNavigationButton(context, 'Lifecycle', LifecycleRoute()),
           // _buildNavigationButton(context, 'Layout basic', LayoutBasicRoute()),
@@ -67,6 +70,7 @@ class MyHomeRoute extends StatelessWidget {
           // _buildNavigationButton(context, 'Stateful encapsulation', StatefulEncapsulationRoute()),
           // _buildNavigationButton(context, 'List', ListRoute()),
           // _buildNavigationButton(context, 'Numbers game bloc', NumbersGameBlocRoute()),
+          // _buildNavigationButton(context, 'Calculator cubit', CalculatorCubitRoute()),
         ],
       ),
     );
