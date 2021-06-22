@@ -247,7 +247,7 @@ class LayoutBasicWidget extends StatelessWidget {
             ),
             Icon(
               Icons.wifi,
-              size:80,
+              size: 80,
               color: Colors.lightBlue,
             )
           ],
@@ -257,7 +257,12 @@ class LayoutBasicWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(width: 100, height: 100, child: Image.network('https://s3cdn.yourator.co/companies/logos/000/000/465/thumb/9bb1a700c41b0ce13a25d44c2c076c4a9e4d258a.png'),),
+            Container(
+              width: 100,
+              height: 100,
+              child: Image.network(
+                  'https://s3cdn.yourator.co/companies/logos/000/000/465/thumb/9bb1a700c41b0ce13a25d44c2c076c4a9e4d258a.png'),
+            ),
           ],
         ),
         Divider(),
@@ -266,7 +271,11 @@ class LayoutBasicWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Add assets to pubspec.yaml
-            Container(width: 100, height: 100, child: Image.asset('assets/pic1.jpeg'),),
+            Container(
+              width: 100,
+              height: 100,
+              child: Image.asset('assets/pic1.jpeg'),
+            ),
           ],
         ),
         Divider(),
@@ -275,11 +284,39 @@ class LayoutBasicWidget extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Container(width: 100, height: 100, color: Colors.red,),
-                Container(width: 90, height: 90, color: Colors.green,),
-                Container(width: 80, height: 80, color: Colors.blue,),
-                Positioned(bottom: -10, right: -10, child: Container(width: 50, height: 50, color: Colors.yellow,),),
-                Positioned(bottom: 0, left: 0, child: Container(width: 50, height: 50, color: Colors.grey,),),
+                Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.red,
+                ),
+                Container(
+                  width: 90,
+                  height: 90,
+                  color: Colors.green,
+                ),
+                Container(
+                  width: 80,
+                  height: 80,
+                  color: Colors.blue,
+                ),
+                Positioned(
+                  bottom: -10,
+                  right: -10,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.yellow,
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.grey,
+                  ),
+                ),
               ],
               clipBehavior: Clip.none,
             )
@@ -287,25 +324,33 @@ class LayoutBasicWidget extends StatelessWidget {
         ),
         BiggerDivider(),
         _buildIdAndNotionWidget('19', 'IconButton can click'),
-        IconButton(icon: const Icon(Icons.star, size: 50, color: Colors.blue,), onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('You are lucky star!'),
-          ));
-        }),
+        IconButton(
+            icon: const Icon(
+              Icons.star,
+              size: 50,
+              color: Colors.blue,
+            ),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('You are lucky star!'),
+              ));
+            }),
         Divider(),
         _buildIdAndNotionWidget('20', 'FloatingActionButton can click'),
-        FloatingActionButton(child: Icon(Icons.add), onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('You want to add something!')
-          ));
-        }),
+        FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('You want to add something!')));
+            }),
         Divider(),
         _buildIdAndNotionWidget('21', 'ElevatedButton can click'),
-        ElevatedButton(child: Text('Click me'), onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Click me response!')
-          ));
-        }),
+        ElevatedButton(
+            child: Text('Click me'),
+            onPressed: () {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Click me response!')));
+            }),
         Divider(),
         _buildIdAndNotionWidget('22', 'Widget can tap'),
         GestureDetector(
