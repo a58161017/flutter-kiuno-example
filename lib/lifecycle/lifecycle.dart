@@ -15,7 +15,6 @@ class LifecycleRoute extends BaseRoute {
 }
 
 class _Lifecycle extends StatefulWidget {
-
   @override
   _LifecycleState createState() => _LifecycleState();
 }
@@ -33,11 +32,13 @@ class _LifecycleState extends State<_Lifecycle> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  late AppLifecycleState _notification;
+  AppLifecycleState? _notification;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() { _notification = state; });
+    setState(() {
+      _notification = state;
+    });
   }
 
   @override
