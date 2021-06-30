@@ -6,24 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_kiuno_example/base.dart';
 
-class ListRoute extends BaseRoute {
+class ListBasicRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
     return buildMaterialApp(
       context,
-      'Startup List',
-      'Kiuno\'s list',
-      _ListWidget(),
+      'Startup List Basic',
+      'Kiuno\'s list basic',
+      _ListBasicWidget(),
     );
   }
 }
 
-class _ListWidget extends StatefulWidget {
+class _ListBasicWidget extends StatefulWidget {
   @override
-  _ListState createState() => _ListState();
+  _ListBasicState createState() => _ListBasicState();
 }
 
-class _ListState extends State<_ListWidget>
+class _ListBasicState extends State<_ListBasicWidget>
     with SingleTickerProviderStateMixin {
   static const loadingTag = "##loading##";
   var _words = <String>[loadingTag];
@@ -32,11 +32,14 @@ class _ListState extends State<_ListWidget>
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-  late AnimationController _controller;
+  late AnimationController _animationController;
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: const Offset(0.0, -1.0),
     end: Offset.zero,
-  ).animate(_controller);
+  ).animate(_animationController);
+
+  late ScrollController _scrollController;
+  bool showToTopBtn = false;
 
   @override
   void initState() {
@@ -44,8 +47,24 @@ class _ListState extends State<_ListWidget>
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    _controller = AnimationController(
+
+    _animationController = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
+
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      print(_scrollController.offset);
+      if (_scrollController.offset < 1000 && showToTopBtn) {
+        setState(() {
+          showToTopBtn = false;
+        });
+      } else if (_scrollController.offset >= 1000 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
+      }
+    });
+
     _retrieveData();
   }
 
@@ -74,11 +93,11 @@ class _ListState extends State<_ListWidget>
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
         setState(() => _connectionStatus = result.toString());
-        _controller.reverse();
+        _animationController.reverse();
         break;
       case ConnectivityResult.none:
         setState(() => _connectionStatus = result.toString());
-        _controller.forward();
+        _animationController.forward();
         break;
       default:
         setState(() => _connectionStatus = 'Failed to get connectivity.');
@@ -91,6 +110,7 @@ class _ListState extends State<_ListWidget>
     return Stack(
       children: [
         ListView.separated(
+          controller: _scrollController,
           itemCount: _words.length,
           itemBuilder: (BuildContext context, int index) {
             if (_words[index] == loadingTag) {
@@ -177,13 +197,28 @@ class _ListState extends State<_ListWidget>
             )),
           ),
         ),
+        Visibility(
+          visible: showToTopBtn,
+          child: Positioned(
+            bottom: 8,
+            right: 8,
+            child: FloatingActionButton(
+                child: Icon(Icons.arrow_upward),
+                onPressed: () {
+                  _scrollController.animateTo(.0,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.ease);
+                }),
+          ),
+        )
       ],
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationController.dispose();
+    _scrollController.dispose();
     _connectivitySubscription.cancel();
     super.dispose();
   }

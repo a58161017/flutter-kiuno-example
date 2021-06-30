@@ -13,13 +13,17 @@ import 'package:flutter_kiuno_example/layout/layout_basic2.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex1.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex2.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex3.dart';
+import 'package:flutter_kiuno_example/layout/list/combination_list.dart';
+import 'package:flutter_kiuno_example/layout/list/mutil_list.dart';
 import 'package:flutter_kiuno_example/state/stateful_basic.dart';
 import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 
 import 'global_bloc_observer.dart';
+import 'layout/list/custom_scroll_view.dart';
+import 'layout/list/view_holder.dart';
 import 'lifecycle/lifecycle.dart';
-import 'layout/list.dart';
+import 'layout/list/list_basic.dart';
 
 late List<Widget> list;
 
@@ -49,7 +53,14 @@ void initRouteList() {
     NavigateButtonWidget(
         name: "stateful_encapsulation_page",
         route: StatefulEncapsulationRoute()),
-    NavigateButtonWidget(name: "list_page", route: ListRoute()),
+    TitleWidget(title: "ScrollView"),
+    NavigateButtonWidget(name: "list_basic_page", route: ListBasicRoute()),
+    NavigateButtonWidget(name: "multi_list_page", route: MultiListRoute()),
+    NavigateButtonWidget(name: "view_holder_page", route: ViewHolderRoute()),
+    NavigateButtonWidget(
+        name: "custom_scroll_view_page", route: CustomScrollViewRoute()),
+    NavigateButtonWidget(
+        name: "combination_list_page", route: CombinationListRoute()),
     TitleWidget(title: "Animation"),
     NavigateButtonWidget(
         name: "implicit_animations_page", route: ImplicitAnimationsRoute()),
