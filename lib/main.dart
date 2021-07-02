@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_kiuno_example/animation/animation_basic.dart';
 import 'package:flutter_kiuno_example/animation/explicit_animations.dart';
@@ -19,7 +20,9 @@ import 'package:flutter_kiuno_example/state/stateful_basic.dart';
 import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 
+import 'gesture/small_steel_ball.dart';
 import 'global_bloc_observer.dart';
+import 'gesture/guesture_detector.dart';
 import 'layout/list/custom_scroll_view.dart';
 import 'layout/list/nested_list_view.dart';
 import 'layout/list/nested_list_view2.dart';
@@ -31,8 +34,16 @@ import 'layout/list/list_basic.dart';
 late List<Widget> list;
 
 void main() {
+  /*
+   * Causes objects like RenderPointerListener to flash while they are being
+   * tapped. This can be useful to see how large the hit box is, e.g.
+   * when debugging buttons that are harder to hit than expected.
+   */
+  // debugPaintPointersEnabled = true;
+
   // Bloc.observer = GlobalBlocObserver(); // Register GlobalBlocObserver
   // Bloc.observer = BlocObserver() // Unregister GlobalBlocObserver
+
   initRouteList();
   runApp(MyApp());
 }
@@ -89,6 +100,11 @@ void initRouteList() {
         name: "numbers_game_bloc_page", route: NumbersGameBlocRoute()),
     NavigateButtonWidget(
         name: "calculator_cubit_page", route: CalculatorCubitRoute()),
+    TitleWidget(title: "Other"),
+    NavigateButtonWidget(
+        name: "gesture_detector_page", route: GestureDetectorRoute()),
+    NavigateButtonWidget(
+        name: "small_steel_ball_page", route: SmallSteelBallRoute()),
   ];
 }
 

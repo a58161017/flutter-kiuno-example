@@ -9,12 +9,12 @@ class LayoutBasicRoute extends BaseRoute {
       context,
       'Startup Layout Basic',
       'Kiuno\'s layout basic',
-      LayoutBasicWidget(),
+      _LayoutBasicWidget(),
     );
   }
 }
 
-class LayoutBasicWidget extends StatelessWidget {
+class _LayoutBasicWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
