@@ -21,6 +21,9 @@ import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 
 import 'global_bloc_observer.dart';
 import 'layout/list/custom_scroll_view.dart';
+import 'layout/list/nested_list_view.dart';
+import 'layout/list/nested_list_view2.dart';
+import 'layout/list/nested_list_view3.dart';
 import 'layout/list/view_holder.dart';
 import 'lifecycle/lifecycle.dart';
 import 'layout/list/list_basic.dart';
@@ -59,6 +62,12 @@ void initRouteList() {
     NavigateButtonWidget(name: "view_holder_page", route: ViewHolderRoute()),
     NavigateButtonWidget(
         name: "custom_scroll_view_page", route: CustomScrollViewRoute()),
+    NavigateButtonWidget(
+        name: "nested_list_view_page", route: NestedListViewRoute()),
+    NavigateButtonWidget(
+        name: "nested_list_view2_page", route: NestedListView2Route()),
+    NavigateButtonWidget(
+        name: "nested_list_view3_page", route: NestedListView3Route()),
     NavigateButtonWidget(
         name: "combination_list_page", route: CombinationListRoute()),
     TitleWidget(title: "Animation"),
