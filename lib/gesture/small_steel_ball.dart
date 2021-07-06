@@ -1,7 +1,8 @@
-import 'dart:ui';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_kiuno_example/base.dart';
+import 'package:flutter_kiuno_example/widget/rebound_ball.dart';
+
+const int BALL_SIZE = 50;
 
 class SmallSteelBallRoute extends BaseRoute {
   @override
@@ -16,147 +17,91 @@ class _SmallSteelBallWidget extends StatefulWidget {
   _SmallSteelBallState createState() => _SmallSteelBallState();
 }
 
-class _SmallSteelBallState extends State<_SmallSteelBallWidget>
-    with SingleTickerProviderStateMixin {
+class _SmallSteelBallState extends State<_SmallSteelBallWidget> {
+  GlobalKey<ReboundBallState> _reboundBallGlobalKey = GlobalKey();
+  GlobalKey _stackGlobalKey = GlobalKey();
+  List<GlobalKey> _obstacleGlobalKeyList = [GlobalKey(), GlobalKey()];
+  List<_ObjectInfo?> _obstacleObjList = [];
+  List<int> _obstacleHealthList = [10, 10];
+
   final List<String> ballList = [
+    'assets/small_steel_ball.png',
     'assets/ball1.png',
     'assets/ball2.png',
     'assets/ball3.png',
   ];
 
-  int ballIndex = 0;
-
-  late final _screenWidth;
-  late final _screenHeight;
-  late final _appBarHeight;
-  late final _navigationBarHeight;
-
-  late Animation<double> _animation;
-  late AnimationController _controller;
-
-  double _oldTop = 0.0;
-  double _oldLeft = 0.0;
-  double _newTop = 0.0;
-  double _newLeft = 0.0;
-  double _velocityX = 0.0;
-  double _velocityY = 0.0;
-
-  double _ballSize = 50.0;
-
-  double _tempAnimationValue = 0.0;
-
-  void _initScreenSize(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
-    _appBarHeight = kToolbarHeight;
-    _navigationBarHeight = MediaQueryData.fromWindow(window).padding.top;
-    debugPrint(
-        '_screenWidth: $_screenWidth, _screenHeight: $_screenHeight, _appBarHeight: $_appBarHeight, _navigationBarHeight: $_navigationBarHeight');
-  }
-
-  void _changeBall() {
-    setState(() {
-      int tempIndex = ballIndex;
-      tempIndex++;
-      if (tempIndex >= ballList.length) {
-        ballIndex = 0;
-      } else {
-        ballIndex = tempIndex;
-      }
-    });
-  }
-
-  void _moveBall(double offsetX, double offsetY, bool rebound) {
-    setState(() {
-      _oldLeft = _newLeft;
-      _oldTop = _newTop;
-
-      double tempLeft = _oldLeft + offsetX;
-      double tempTop = _oldTop + offsetY;
-      if (tempLeft < 0.0) {
-        tempLeft = 0.0;
-        _velocityX = -_velocityX;
-      } else if (tempLeft > _screenWidth - _ballSize) {
-        tempLeft = _screenWidth - _ballSize;
-        _velocityX = -_velocityX;
-      }
-      if (tempTop < 0.0) {
-        tempTop = 0.0;
-        _velocityY = -_velocityY;
-      } else if (tempTop >
-          _screenHeight - _ballSize - _appBarHeight - _navigationBarHeight) {
-        tempTop =
-            _screenHeight - _ballSize - _appBarHeight - _navigationBarHeight;
-        _velocityY = -_velocityY;
-      }
-      _newLeft = tempLeft;
-      _newTop = tempTop;
-    });
-  }
+  int _ballIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = _controller =
-        AnimationController(duration: const Duration(seconds: 1), vsync: this);
-    _animation = Tween(begin: 0.0, end: max(_velocityX.abs(), _velocityY.abs()))
-        .animate(
-            CurvedAnimation(parent: _controller, curve: Curves.easeOutQuint));
-    _animation.addListener(() {
-      double maxValue = max(_velocityX.abs(), _velocityY.abs());
-      double offsetRatio = (_animation.value - _tempAnimationValue) / maxValue;
-      debugPrint(
-          'AnimationController.listener => animation.value: ${_animation.value}, maxValue: $maxValue, offsetRatio: $offsetRatio');
-      _moveBall(
-          offsetRatio * _velocityX / 10, offsetRatio * _velocityY / , true);
-      _tempAnimationValue = _animation.value;
-    });
-    // _animation.addStatusListener((status) {
-    // if (status == AnimationStatus.completed) {
-    //   _controller.reverse();
-    // } else if (status == AnimationStatus.dismissed) {
-    //   _controller.forward();
-    // }
-    // });
-    Future.delayed(Duration.zero, () {
-      _initScreenSize(context);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      key: _stackGlobalKey,
       children: <Widget>[
         Positioned(
-          top: _newTop,
-          left: _newLeft,
-          child: GestureDetector(
-            child: Image.asset(
-              ballList[ballIndex],
-              width: _ballSize,
-              height: _ballSize,
+          key: _obstacleGlobalKeyList[0],
+          left: 100.0,
+          top: 150.0,
+          child: Container(
+            width: 100,
+            height: 100,
+            child: Stack(
+              children: [
+                Image.asset(_obstacleHealthList[0] > 0
+                    ? 'assets/bricks.png'
+                    : 'assets/bricks_broken.png'),
+                Center(
+                  child: Text(
+                    'HP:${_obstacleHealthList[0]}',
+                    style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
             ),
-            onTap: () => _changeBall(),
-            onPanDown: (DragDownDetails e) {
-              debugPrint("onPageDown： ${e.globalPosition}");
-            },
-            onPanUpdate: (DragUpdateDetails e) {
-              _moveBall(e.delta.dx, e.delta.dy, false);
-            },
-            onPanEnd: (DragEndDetails e) {
-              _tempAnimationValue = 0.0;
-              _velocityX = e.velocity.pixelsPerSecond.dx;
-              _velocityY = e.velocity.pixelsPerSecond.dy;
-              debugPrint(
-                  "onPanEnd： ${e.velocity}, _velocityX: $_velocityX, _velocityY: $_velocityY");
-              _animation = Tween(
-                      begin: 0.0, end: max(_velocityX.abs(), _velocityY.abs()))
-                  .animate(CurvedAnimation(
-                      parent: _controller, curve: Curves.easeOutQuint));
-              _controller.reset();
-              _controller.forward();
-            },
           ),
+        ),
+        Positioned(
+          key: _obstacleGlobalKeyList[1],
+          right: 100.0,
+          bottom: 150.0,
+          child: Container(
+            width: 100,
+            height: 100,
+            child: Stack(
+              children: [
+                Image.asset(_obstacleHealthList[1] > 0
+                    ? 'assets/bricks.png'
+                    : 'assets/bricks_broken.png'),
+                Center(
+                  child: Text(
+                    'HP:${_obstacleHealthList[1]}',
+                    style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        ReboundBall(
+          key: _reboundBallGlobalKey,
+          size: BALL_SIZE,
+          hasAppBar: true,
+          resource: ballList[_ballIndex],
+          left: 30.0,
+          top: 30.0,
+          onBallTap: _onBallTap,
+          onBallMoved: _onBallMoved,
         )
       ],
     );
@@ -164,7 +109,166 @@ class _SmallSteelBallState extends State<_SmallSteelBallWidget>
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+  }
+
+  void _onBallTap() {
+    int tempIndex = _ballIndex;
+    _ballIndex = (++tempIndex >= ballList.length) ? 0 : tempIndex;
+    _reboundBallGlobalKey.currentState?.changeBall(ballList[_ballIndex]);
+  }
+
+  void _onBallMoved(double dx, double dy, Size size) {
+    var results = _checkCollision(_ObjectInfo(dx: dx, dy: dy, size: size));
+    _reboundBallGlobalKey.currentState
+        ?.changeDirection(results[0] || results[2], results[1] || results[3]);
+  }
+
+  // List<bool>[left, top, right, bottom]
+  List<bool> _checkCollision(_ObjectInfo ball) {
+    var results = [false, false, false, false];
+    if (_obstacleObjList.length == 0) {
+      _obstacleGlobalKeyList.forEach((obstacleGlobalKey) {
+        var obstacleObj =
+            _getObjectInfoFromGlobalKey(_stackGlobalKey, obstacleGlobalKey);
+        _obstacleObjList.add(obstacleObj);
+      });
+    }
+    for (var i = 0; i < _obstacleObjList.length; i++) {
+      if (_obstacleObjList[i] != null && _obstacleHealthList[i] > 0) {
+        final tempResults = ball.compareCollisionPoint(_obstacleObjList[i]!);
+        final hasCollision = tempResults[0] ||
+            tempResults[1] ||
+            tempResults[2] ||
+            tempResults[3];
+        if (hasCollision) {
+          setState(() => _obstacleHealthList[i]--);
+        }
+        results[0] |= tempResults[0];
+        results[1] |= tempResults[1];
+        results[2] |= tempResults[2];
+        results[3] |= tempResults[3];
+      }
+    }
+    return results;
+  }
+
+  _ObjectInfo? _getObjectInfoFromGlobalKey(
+      GlobalKey parentKey, GlobalKey childKey) {
+    RenderBox? childRenderBox =
+        childKey.currentContext?.findRenderObject() as RenderBox?;
+    RenderBox? parentRenderBox =
+        parentKey.currentContext?.findRenderObject() as RenderBox?;
+    if (childRenderBox != null && parentRenderBox != null) {
+      Offset childOffset = childRenderBox.localToGlobal(Offset.zero);
+      Offset childRelativeToParent = parentRenderBox.globalToLocal(childOffset);
+      // debugPrint(
+      //     'Obstacle._getObjectInfoFromGlobalKey() => dx: ${childRelativeToParent.dx}, dy: ${childRelativeToParent.dy}, size: ${childRenderBox.size}');
+      return _ObjectInfo(
+          dx: childRelativeToParent.dx,
+          dy: childRelativeToParent.dy,
+          size: childRenderBox.size);
+    } else {
+      return null;
+    }
+  }
+}
+
+class _ObjectInfo {
+  const _ObjectInfo({required this.dx, required this.dy, required this.size});
+
+  final double dx;
+  final double dy;
+  final Size size;
+
+  Rect getRect() {
+    return Rect.fromLTRB(dx, dy, dx + size.width, dy + size.height);
+  }
+
+  // List<bool>[left, top, right, bottom]
+  List<bool> compareCollisionPoint(_ObjectInfo otherObj) {
+    var results = [false, false, false, false];
+    var rect = getRect();
+    var otherRect = otherObj.getRect();
+    var corners = [
+      // [leftTop, rightTop, leftBottom, rightBottom]
+      (rect.left >= otherRect.left && rect.left <= otherRect.right) &&
+          (rect.top >= otherRect.top && rect.top <= otherRect.bottom),
+      (rect.right >= otherRect.left && rect.right <= otherRect.right) &&
+          (rect.top >= otherRect.top && rect.top <= otherRect.bottom),
+      (rect.left >= otherRect.left && rect.left <= otherRect.right) &&
+          (rect.bottom >= otherRect.top && rect.bottom <= otherRect.bottom),
+      (rect.right >= otherRect.left && rect.right <= otherRect.right) &&
+          (rect.bottom >= otherRect.top && rect.bottom <= otherRect.bottom),
+    ];
+    if (corners[0] && corners[2]) {
+      results[0] = true;
+    } else if (corners[0] && corners[1]) {
+      results[1] = true;
+    } else if (corners[1] && corners[3]) {
+      results[2] = true;
+    } else if (corners[2] && corners[3]) {
+      results[3] = true;
+    } else if (corners[0]) {
+      double topOffset =
+          _getOffset(rect.left, rect.right, otherRect.left, otherRect.right);
+      double leftOffset =
+          _getOffset(rect.top, rect.bottom, otherRect.top, otherRect.bottom);
+      if (topOffset == leftOffset) {
+        results[0] = true;
+        results[1] = true;
+      } else if (topOffset > leftOffset) {
+        results[1] = true;
+      } else {
+        results[0] = true;
+      }
+    } else if (corners[1]) {
+      double topOffset =
+          _getOffset(rect.left, rect.right, otherRect.left, otherRect.right);
+      double rightOffset =
+          _getOffset(rect.top, rect.bottom, otherRect.top, otherRect.bottom);
+      if (topOffset == rightOffset) {
+        results[1] = true;
+        results[2] = true;
+      } else if (topOffset > rightOffset) {
+        results[1] = true;
+      } else {
+        results[2] = true;
+      }
+    } else if (corners[2]) {
+      double bottomOffset =
+          _getOffset(rect.left, rect.right, otherRect.left, otherRect.right);
+      double leftOffset =
+          _getOffset(rect.top, rect.bottom, otherRect.top, otherRect.bottom);
+      if (bottomOffset == leftOffset) {
+        results[0] = true;
+        results[3] = true;
+      } else if (bottomOffset > leftOffset) {
+        results[3] = true;
+      } else {
+        results[0] = true;
+      }
+    } else if (corners[3]) {
+      double bottomOffset =
+          _getOffset(rect.left, rect.right, otherRect.left, otherRect.right);
+      double rightOffset =
+          _getOffset(rect.top, rect.bottom, otherRect.top, otherRect.bottom);
+      if (bottomOffset == rightOffset) {
+        results[2] = true;
+        results[3] = true;
+      } else if (bottomOffset > rightOffset) {
+        results[3] = true;
+      } else {
+        results[2] = true;
+      }
+    }
+    return results;
+  }
+
+  double _getOffset(
+      double obj1Val1, double obj1Val2, double obj2Val1, double obj2Val2) {
+    return (obj2Val1 >= obj1Val1 && obj2Val1 <= obj1Val2)
+        ? (obj1Val2 - obj2Val1).abs()
+        : (obj1Val1 - obj2Val2).abs();
   }
 }

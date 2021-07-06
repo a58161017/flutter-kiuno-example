@@ -63,6 +63,8 @@ flutter:
     - assets/ball1.png
     - assets/ball2.png
     - assets/ball3.png
+    - assets/bricks.png
+    - assets/bricks_broken.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

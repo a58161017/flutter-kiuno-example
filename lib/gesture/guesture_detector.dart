@@ -14,6 +14,7 @@ class GestureDetectorRoute extends BaseRoute {
       // _ScalePictureWidget(),
       // _GestureRecognizerWidget(),
       // _BothDirectionWidget(),
+      // _GestureConflictTestRouteWidget(),
     );
   }
 }
@@ -52,8 +53,8 @@ class _Drag extends StatefulWidget {
 }
 
 class _DragState extends State<_Drag> with SingleTickerProviderStateMixin {
-  double _top = 0.0; //距顶部的偏移
-  double _left = 0.0; //距左边的偏移
+  double _top = 0.0;
+  double _left = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -63,23 +64,19 @@ class _DragState extends State<_Drag> with SingleTickerProviderStateMixin {
           top: _top,
           left: _left,
           child: GestureDetector(
-            child: CircleAvatar(child: Text("A")),
-            //手指按下时会触发此回调
+            child: CircleAvatar(child: Text('A')),
+            // onScaleUpdate: (ScaleUpdateDetails details) => {}, // gesture_detector.dart -> line: 280
             onPanDown: (DragDownDetails e) {
-              //打印手指按下的位置(相对于屏幕)
-              print("用户手指按下：${e.globalPosition}");
+              debugPrint('使用者手指按下：${e.globalPosition}');
             },
-            //手指滑动时会触发此回调
             onPanUpdate: (DragUpdateDetails e) {
-              //用户手指滑动时，更新偏移，重新构建
               setState(() {
                 _left += e.delta.dx;
                 _top += e.delta.dy;
               });
             },
             onPanEnd: (DragEndDetails e) {
-              //打印滑动结束时在x、y轴上的速度
-              print(e.velocity);
+              debugPrint(e.velocity.toString());
             },
           ),
         )
@@ -94,17 +91,15 @@ class _ScalePictureWidget extends StatefulWidget {
 }
 
 class _ScalePictureState extends State<_ScalePictureWidget> {
-  double _width = 200.0; //通过修改图片宽度来达到缩放效果
+  double _width = 200.0;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
-        //指定宽度，高度自适应
         child: Image.asset('assets/lake.jpeg', width: _width),
         onScaleUpdate: (ScaleUpdateDetails details) {
           setState(() {
-            //缩放倍数在0.8到10倍之间
             _width = 200 * details.scale.clamp(.8, 10.0);
           });
         },
@@ -120,11 +115,10 @@ class _GestureRecognizerWidget extends StatefulWidget {
 
 class _GestureRecognizerState extends State<_GestureRecognizerWidget> {
   TapGestureRecognizer _tapGestureRecognizer = new TapGestureRecognizer();
-  bool _toggle = false; //变色开关
+  bool _toggle = false;
 
   @override
   void dispose() {
-    //用到GestureRecognizer的话一定要调用其dispose方法释放资源
     _tapGestureRecognizer.dispose();
     super.dispose();
   }
@@ -133,9 +127,9 @@ class _GestureRecognizerState extends State<_GestureRecognizerWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: Text.rich(TextSpan(children: [
-        TextSpan(text: "你好世界"),
+        TextSpan(text: '你好世界'),
         TextSpan(
-          text: "点我变色",
+          text: '點我變色',
           style: TextStyle(
               fontSize: 30.0, color: _toggle ? Colors.blue : Colors.red),
           recognizer: _tapGestureRecognizer
@@ -145,7 +139,7 @@ class _GestureRecognizerState extends State<_GestureRecognizerWidget> {
               });
             },
         ),
-        TextSpan(text: "你好世界"),
+        TextSpan(text: '你好世界'),
       ])),
     );
   }
@@ -168,8 +162,7 @@ class _BothDirectionState extends State<_BothDirectionWidget> {
           top: _top,
           left: _left,
           child: GestureDetector(
-            child: CircleAvatar(child: Text("A")),
-            //垂直方向拖动事件
+            child: CircleAvatar(child: Text('A')),
             onVerticalDragUpdate: (DragUpdateDetails details) {
               setState(() {
                 _top += details.delta.dy;
@@ -180,6 +173,68 @@ class _BothDirectionState extends State<_BothDirectionWidget> {
                 _left += details.delta.dx;
               });
             },
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _GestureConflictTestRouteWidget extends StatefulWidget {
+  @override
+  _GestureConflictTestRouteState createState() =>
+      _GestureConflictTestRouteState();
+}
+
+class _GestureConflictTestRouteState
+    extends State<_GestureConflictTestRouteWidget> {
+  double _left = 0.0;
+  double _leftB = 0.0;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          left: _left,
+          child: GestureDetector(
+            child: CircleAvatar(child: Text('A')),
+            onHorizontalDragUpdate: (DragUpdateDetails details) {
+              setState(() {
+                _left += details.delta.dx;
+              });
+            },
+            onHorizontalDragEnd: (details) {
+              debugPrint('onHorizontalDragEnd');
+            },
+            onTapDown: (details) {
+              debugPrint('down');
+            },
+            onTapUp: (details) {
+              debugPrint('up');
+            },
+          ),
+        ),
+        Positioned(
+          top: 80.0,
+          left: _leftB,
+          child: Listener(
+            onPointerDown: (details) {
+              print('down');
+            },
+            onPointerUp: (details) {
+              print('up');
+            },
+            child: GestureDetector(
+              child: CircleAvatar(child: Text('B')),
+              onHorizontalDragUpdate: (DragUpdateDetails details) {
+                setState(() {
+                  _leftB += details.delta.dx;
+                });
+              },
+              onHorizontalDragEnd: (details) {
+                print('onHorizontalDragEnd');
+              },
+            ),
           ),
         )
       ],
