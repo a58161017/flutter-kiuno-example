@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,17 +24,20 @@ import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
 import 'gesture/small_steel_ball.dart';
 import 'gesture/guesture_detector.dart';
 import 'layout/list/custom_scroll_view.dart';
+import 'layout/list/findable_list_view.dart';
 import 'layout/list/nested_list_view.dart';
 import 'layout/list/nested_list_view2.dart';
 import 'layout/list/nested_list_view3.dart';
 import 'layout/list/view_holder.dart';
 import 'lifecycle/lifecycle.dart';
 import 'layout/list/list_basic.dart';
+import 'page/camera_page.dart';
 
 late List<_TitleItem> _titleList;
 late List<_RouteItem> _routeList;
+List<CameraDescription> cameras = [];
 
-void main() {
+Future<void> main() async {
   /*
    * Causes objects like RenderPointerListener to flash while they are being
    * tapped. This can be useful to see how large the hit box is, e.g.
@@ -44,6 +48,14 @@ void main() {
   // Bloc.observer = GlobalBlocObserver(); // Register GlobalBlocObserver
   // Bloc.observer = BlocObserver() // Unregister GlobalBlocObserver
 
+  // Fetch the available cameras before initializing the app.
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    debugPrint('e.code: ${e.code}, e.description: ${e.description}');
+  }
+
   initRouteList();
   runApp(MyApp());
 }
@@ -53,6 +65,7 @@ const String TITLE_LAYOUT = 'Layout';
 const String TITLE_SCROLLVIEW = 'ScrollView';
 const String TITLE_ANIMATION = 'Animation';
 const String TITLE_BLOC = 'Bloc';
+const String TITLE_CAMERA = 'Camera';
 const String TITLE_OTHER = 'Other';
 
 void initRouteList() {
@@ -62,6 +75,7 @@ void initRouteList() {
     _TitleItem(headerValue: TITLE_SCROLLVIEW),
     _TitleItem(headerValue: TITLE_ANIMATION),
     _TitleItem(headerValue: TITLE_BLOC),
+    _TitleItem(headerValue: TITLE_CAMERA),
     _TitleItem(headerValue: TITLE_OTHER),
   ];
 
@@ -135,6 +149,10 @@ void initRouteList() {
         routeName: 'combination_list_page',
         route: CombinationListRoute()),
     _RouteItem(
+        headerValue: TITLE_SCROLLVIEW,
+        routeName: 'findable_list_view_page',
+        route: FindableListViewRoute()),
+    _RouteItem(
         headerValue: TITLE_ANIMATION,
         routeName: 'implicit_animations_page',
         route: ImplicitAnimationsRoute()),
@@ -166,6 +184,11 @@ void initRouteList() {
         headerValue: TITLE_BLOC,
         routeName: 'calculator_cubit_page',
         route: CalculatorCubitRoute()),
+    _RouteItem(
+      headerValue: TITLE_CAMERA,
+      routeName: 'camera',
+      route: CameraPage(),
+    ),
     _RouteItem(
         headerValue: TITLE_OTHER,
         routeName: 'gesture_detector_page',
@@ -314,7 +337,7 @@ ElevatedButton _buildNavigationButton(
   );
 }
 
-Route _buildPageRouteBuilder(BaseRoute route) {
+Route _buildPageRouteBuilder(Widget route) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => route,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -395,7 +418,7 @@ class _TitleItem {
 class _RouteItem {
   final String headerValue;
   final String routeName;
-  final BaseRoute route;
+  final Widget route;
 
   _RouteItem(
       {required this.headerValue,
