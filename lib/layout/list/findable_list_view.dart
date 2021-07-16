@@ -15,32 +15,79 @@ class FindableListViewRoute extends BaseRoute {
   }
 }
 
-class _FindableListViewWidget extends StatelessWidget {
+class _FindableListViewWidget extends StatefulWidget {
+  @override
+  _FindableListViewState createState() => _FindableListViewState();
+}
+
+class _FindableListViewState extends State<_FindableListViewWidget> {
   var _listViewKey = RectGetter.createGlobalKey();
   var _listItemKeys = {};
 
+  var _titleText = '';
+  var _needTitleTip = false;
+
+  void _enabledTitleTip(bool enabled) {
+    setState(() => _needTitleTip = enabled);
+  }
+
+  void _changeTitleText(String text) {
+    setState(() => _titleText = text);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollUpdateNotification>(
-      onNotification: (notification) {
-        debugPrint(getVisible().toString());
-        return true; // Can't continue to pass to the parent widget.
-      },
-      child: RectGetter(
-        key: _listViewKey,
-        child: ListView.builder(
-          itemCount: 100,
-          itemBuilder: (BuildContext context, int index) {
-            _listItemKeys[index] = RectGetter.createGlobalKey();
-            return RectGetter(
-              key: _listItemKeys[index],
-              child: ListTile(
-                title: Center(child: Text(index.toString())),
-              ),
-            );
+    return Stack(
+      children: [
+        NotificationListener<ScrollUpdateNotification>(
+          onNotification: (notification) {
+            final indexList = getVisible();
+            var enabled = indexList[0] >= 10;
+            _enabledTitleTip(enabled);
+            if (enabled) {
+              _changeTitleText(indexList[0].toString());
+            }
+            debugPrint(indexList.toString());
+            return true; // Can't continue to pass to the parent widget.
           },
+          child: RectGetter(
+            key: _listViewKey,
+            child: ListView.builder(
+              itemCount: 100,
+              itemBuilder: (BuildContext context, int index) {
+                _listItemKeys[index] = RectGetter.createGlobalKey();
+                return RectGetter(
+                  key: _listItemKeys[index],
+                  child: ListTile(
+                    title: Center(child: Text(index.toString())),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-      ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Visibility(
+            visible: _needTitleTip,
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(color: Colors.green),
+              child: Center(
+                child: Text(
+                  _titleText,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

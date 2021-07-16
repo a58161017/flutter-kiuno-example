@@ -7,10 +7,11 @@ class InfoView extends StatelessWidget {
       width: 48,
       height: 48,
       child: Center(
-        child: Image.asset(
-          'assets/info_s.png',
+        child: SvgPicture.asset(
+          'assets/general/info_s.svg',
           width: 24,
           height: 24,
+          color: Color(0xFFFAFDFF),
         ),
       ),
     );

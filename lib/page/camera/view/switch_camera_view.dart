@@ -11,10 +11,11 @@ class SwitchCameraView extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: Image.asset(
-          'assets/switch_camera.png',
+        child: SvgPicture.asset(
+          'assets/camera/switch_camera.svg',
           width: 24,
           height: 24,
+          color: Color(0xFFFAFDFF),
         ),
       ),
     );

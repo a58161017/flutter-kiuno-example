@@ -11,10 +11,11 @@ class AlbumView extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: Image.asset(
-          'assets/album_s.png',
+        child: SvgPicture.asset(
+          'assets/geo/album_s.svg',
           width: 24,
           height: 24,
+          color: Color(0xFFFAFDFF),
         ),
       ),
     );

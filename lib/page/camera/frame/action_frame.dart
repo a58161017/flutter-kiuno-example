@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
+import 'package:flutter_svg/svg.dart';
 
 part '../view/album_view.dart';
 
@@ -6,10 +9,18 @@ part '../view/record_view.dart';
 
 part '../view/switch_camera_view.dart';
 
-class ActionFrame extends StatelessWidget {
-  final VoidCallback? onSwitchCameraClicked;
+abstract class OnActionFrameListener {
+  void onAlbumClicked();
 
-  ActionFrame({this.onSwitchCameraClicked});
+  void onRecordClicked();
+
+  void onSwitchCameraClicked();
+}
+
+class ActionFrame extends StatelessWidget {
+  final OnActionFrameListener? listener;
+
+  ActionFrame({this.listener});
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +33,20 @@ class ActionFrame extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 40),
             child: GestureDetector(
-              onTap: () => {},
+              onTap: () => listener?.onAlbumClicked(),
               child: AlbumView(),
             ),
           ),
-          GestureDetector(
-            onTap: () => {},
-            child: RecordView(),
-          ),
+          BlocBuilder<RecordCubit, bool>(builder: (context, state) {
+            return GestureDetector(
+              onTap: () => listener?.onRecordClicked(),
+              child: RecordView(isRecording: state),
+            );
+          }),
           Padding(
             padding: const EdgeInsets.only(right: 40),
             child: GestureDetector(
-              onTap: () {
-                if (onSwitchCameraClicked != null) {
-                  onSwitchCameraClicked!();
-                }
-              },
+              onTap: () => listener?.onSwitchCameraClicked(),
               child: SwitchCameraView(),
             ),
           ),

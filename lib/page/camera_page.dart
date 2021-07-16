@@ -1,6 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_kiuno_example/cubit/camera/countdown_cubit.dart';
+import 'package:flutter_kiuno_example/cubit/camera/flash_cubit.dart';
+import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
 import 'package:flutter_kiuno_example/main.dart';
 
 import 'camera/frame/app_bar_frame.dart';
@@ -9,18 +13,21 @@ import 'camera/frame/action_frame.dart';
 class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => onBackPressed(context),
-      child: MaterialApp(
-        title: 'Startup Camera',
-        home: Scaffold(
-          appBar: AppBar(
-            title: AppBarFrame(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => CountdownCubit()),
+          BlocProvider(create: (context) => FlashCubit()),
+          BlocProvider(create: (context) => RecordCubit()),
+        ],
+        child: WillPopScope(
+          onWillPop: () => onBackPressed(context),
+          child: MaterialApp(
+            title: 'Startup Camera',
+            home: Scaffold(
+              body: _CameraWidget(),
+            ),
           ),
-          body: _CameraWidget(),
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -29,7 +36,8 @@ class _CameraWidget extends StatefulWidget {
   _CameraState createState() => _CameraState();
 }
 
-class _CameraState extends State<_CameraWidget> {
+class _CameraState extends State<_CameraWidget>
+    implements OnAppBarFrameListener, OnActionFrameListener {
   late CameraController _controller;
 
   void _initCamera() {
@@ -65,6 +73,18 @@ class _CameraState extends State<_CameraWidget> {
     }
   }
 
+  Future<void> setFlashMode(FlashMode mode) async {
+    try {
+      await _controller.setFlashMode(mode);
+    } on CameraException catch (e) {
+      debugPrint('Error: ${e.code}\n${e.description}');
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,19 +99,88 @@ class _CameraState extends State<_CameraWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     return Stack(
       children: [
-        CameraPreview(_controller),
+        Positioned.fill(
+          child: CameraPreview(_controller),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: statusBarHeight,
+            ),
+            child: AppBarFrame(
+              listener: this,
+            ),
+          ),
+        ),
         Positioned(
           bottom: 0,
           left: 0,
           right: 0,
           child: ActionFrame(
-            onSwitchCameraClicked: () => _onCameraSwitch(),
+            listener: this,
           ),
         ),
       ],
     );
+  }
+
+  @override
+  void onCloseClicked() {}
+
+  @override
+  void onCountdownClicked() {
+    switch (context.read<CountdownCubit>().state) {
+      case COUNTDOWN_OFF:
+        context.read<CountdownCubit>().on();
+        break;
+      case COUNTDOWN_FIVE_SECONDS:
+        context.read<CountdownCubit>().off();
+        break;
+    }
+  }
+
+  @override
+  void onFlashClicked() {
+    switch (context.read<FlashCubit>().state) {
+      case FLASH_OFF:
+        context.read<FlashCubit>().on();
+        setFlashMode(FlashMode.torch);
+        break;
+      case FLASH_ON:
+        context.read<FlashCubit>().auto();
+        setFlashMode(FlashMode.auto);
+        break;
+      case FLASH_AUTO:
+        context.read<FlashCubit>().off();
+        setFlashMode(FlashMode.off);
+        break;
+    }
+  }
+
+  @override
+  void onInfoClicked() {}
+
+  @override
+  void onAlbumClicked() {}
+
+  @override
+  void onRecordClicked() {
+    if (context.read<RecordCubit>().state) {
+      context.read<RecordCubit>().stop();
+    } else {
+      context.read<RecordCubit>().start();
+    }
+  }
+
+  @override
+  void onSwitchCameraClicked() {
+    _onCameraSwitch();
   }
 }
 

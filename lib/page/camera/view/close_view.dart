@@ -7,10 +7,11 @@ class CloseView extends StatelessWidget {
       width: 48,
       height: 48,
       child: Center(
-        child: Image.asset(
-          'assets/close.png',
+        child: SvgPicture.asset(
+          'assets/general/close.svg',
           width: 24,
           height: 24,
+          color: Color(0xFFFAFDFF),
         ),
       ),
     );
