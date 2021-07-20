@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class ViewHolderRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup View Holder',
       'Kiuno\'s view holder',
       _ViewHolderWidget(),
     );

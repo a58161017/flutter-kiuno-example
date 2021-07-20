@@ -7,9 +7,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class CalculatorCubitRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Calculator Cubit',
       'Kiuno\'s calculator cubit',
       _CalculatorWidget(),
     );

@@ -5,9 +5,8 @@ import '../base.dart';
 class HeroTransitionRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Hero transition',
       'Kiuno\'s hero transition',
       HeroTransitionWidget(),
     );

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_kiuno_example/cubit/camera/flash_cubit.dart';
 import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
 import 'package:flutter_kiuno_example/page/camera/view/camera_tip_view.dart';
 import 'package:flutter_kiuno_example/page/preview_page.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import '../main.dart';
 import 'camera/view/close_view.dart';
@@ -18,6 +17,7 @@ import 'camera/view/countdown_view.dart';
 import 'camera/view/flash_view.dart';
 import 'camera/view/info_view.dart';
 import 'camera/view/album_view.dart';
+import 'camera/view/permission_tip_view.dart';
 import 'camera/view/record_view.dart';
 import 'camera/view/switch_camera_view.dart';
 
@@ -38,11 +38,8 @@ class CameraPage extends StatelessWidget {
         ],
         child: WillPopScope(
           onWillPop: () => onBackPressed(context),
-          child: MaterialApp(
-            title: 'Startup Camera',
-            home: Scaffold(
-              body: _CameraWidget(),
-            ),
+          child: Scaffold(
+            body: _CameraWidget(),
           ),
         ));
   }
@@ -66,6 +63,14 @@ class _CameraState extends State<_CameraWidget>
   int _countdownSec = COUNTDOWN_SECONDS;
   Timer? _countdownTimer;
   bool _isVisibleTip = true;
+
+  Future<void> _setStatusBarColor(Color color) async {
+    await FlutterStatusbarcolor.setStatusBarColor(color);
+  }
+
+  Future<void> _setNavigationBarColor(Color color) async {
+    await FlutterStatusbarcolor.setNavigationBarColor(color);
+  }
 
   void _initCamera() {
     try {
@@ -159,6 +164,8 @@ class _CameraState extends State<_CameraWidget>
   @override
   void initState() {
     super.initState();
+    _setStatusBarColor(Color(0xFF202525));
+    _setNavigationBarColor(Color(0xFF202525));
     _controller = CameraController(cameras[0], ResolutionPreset.high);
     _initCamera();
   }
@@ -167,6 +174,8 @@ class _CameraState extends State<_CameraWidget>
   void dispose() {
     _countdownTimer?.cancel();
     _controller.dispose();
+    _setStatusBarColor(Color(0x00000000));
+    _setNavigationBarColor(Color(0x00000000));
     super.dispose();
   }
 
@@ -175,110 +184,103 @@ class _CameraState extends State<_CameraWidget>
     return FutureBuilder<void>(
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (_controller.value.isInitialized) {
-            return SafeArea(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CameraPreview(_controller),
-                  ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: AppBarFrame(
-                      listener: this,
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Visibility(
-                        visible: _isVisibleTip,
-                        child: CameraTipView(
-                          key: _cameraTipViewKey,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        Visibility(
-                          visible: _isCountdown,
-                          child: CountdownTextView(
-                            seconds: _countdownSec,
-                          ),
-                        ),
-                        ActionFrame(
-                          key: _actionFrameKey,
-                          listener: this,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Visibility(
-                      visible: _isCountdown,
-                      child: GestureDetector(
-                        onTap: () => {},
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.transparent),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Stack(
-              children: [
-                Positioned.fill(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () => _initCamera(),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.black),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Please click to allow permission again.',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        } else {
-          return Container();
-        }
+        return SafeArea(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xFF202525),
+            ),
+            child: (snapshot.connectionState == ConnectionState.done)
+                ? (_controller.value.isInitialized)
+                    ? _buildCameraWidget()
+                    : _buildPermissionTipWidget()
+                : _buildEmptyWidget(),
+          ),
+        );
       },
     );
   }
 
+  Widget _buildEmptyWidget() {
+    return Container();
+  }
+
+  Widget _buildPermissionTipWidget() {
+    return Center(
+      child: PermissionTipView(
+        onPressedCallback: onPermissionViewCallback,
+      ),
+    );
+  }
+
+  Widget _buildCameraWidget() {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: CameraPreview(_controller),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: AppBarFrame(
+            listener: this,
+          ),
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: Visibility(
+              visible: _isVisibleTip,
+              child: CameraTipView(
+                key: _cameraTipViewKey,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Column(
+            children: [
+              Visibility(
+                visible: _isCountdown,
+                child: CountdownTextView(
+                  seconds: _countdownSec,
+                ),
+              ),
+              ActionFrame(
+                key: _actionFrameKey,
+                listener: this,
+              ),
+            ],
+          ),
+        ),
+        Positioned.fill(
+          child: Visibility(
+            visible: _isCountdown,
+            child: GestureDetector(
+              onTap: () => {},
+              child: Container(
+                decoration: BoxDecoration(color: Colors.transparent),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void onPermissionViewCallback() {
+    _initCamera();
+  }
+
   @override
-  void onCloseClicked() {}
+  void onCloseClicked() {
+    onBackPressed(context);
+  }
 
   @override
   void onCountdownClicked() {

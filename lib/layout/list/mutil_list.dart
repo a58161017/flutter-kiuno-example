@@ -5,9 +5,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class MultiListRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Multi-List',
       'Kiuno\'s multi-list',
       _MultiListWidget(),
     );

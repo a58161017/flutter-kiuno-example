@@ -5,9 +5,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class GestureDetectorRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Gesture Detector',
       'Kiuno\'s gesture detector',
       _GestureDetectorWidget(),
       // _Drag(),

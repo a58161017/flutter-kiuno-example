@@ -11,9 +11,8 @@ class PreviewPage extends BaseRoute {
 
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Preview',
       'Kiuno\'s preview',
       _PreviewWidget(
         filePath: filePath,

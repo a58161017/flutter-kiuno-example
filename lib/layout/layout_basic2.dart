@@ -7,9 +7,8 @@ class LayoutBasic2Route extends BaseRoute {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Layout Basic2',
       'Kiuno\'s layout basic2',
       LayoutBasic2Widget(),
     );

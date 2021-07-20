@@ -19,9 +19,8 @@ Color randomColor() {
 class ImplicitAnimationsRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Implicit Animation',
       'Kiuno\'s implicit animation',
       _ImplicitAnimationsWidget(),
     );

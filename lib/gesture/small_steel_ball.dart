@@ -7,8 +7,11 @@ const int BALL_SIZE = 50;
 class SmallSteelBallRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(context, 'Startup Small Steel Ball',
-        'Kiuno\'s small steel ball', _SmallSteelBallWidget());
+    return buildAppBar(
+      context,
+      'Kiuno\'s small steel ball',
+      _SmallSteelBallWidget(),
+    );
   }
 }
 

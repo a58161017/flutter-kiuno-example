@@ -7,9 +7,8 @@ import 'package:flutter_kiuno_example/widget/vertical_list_view.dart';
 class NestedListView3Route extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Nested ListView3',
       'Kiuno\'s nested listView3',
       _NestedListView3Widget(),
     );

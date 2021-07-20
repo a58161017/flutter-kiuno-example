@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class CustomScrollViewRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Custom Scroll List',
       'Kiuno\'s custom scroll list',
       _CustomScrollViewWidget(),
     );

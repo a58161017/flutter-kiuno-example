@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class CombinationListRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Combination List',
       'Kiuno\'s combination list',
       _CombinationListWidget(),
     );

@@ -5,9 +5,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class LayoutExample2Route extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Layout Example2',
       'Kiuno\'s layout example2',
       LayoutExample2Widget(),
     );
@@ -124,47 +123,71 @@ class _LayoutExample2State extends State<LayoutExample2Widget> {
                     children: [
                       Column(
                         children: [
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Icon(
                             Icons.smartphone,
                             size: 14,
                             color: Colors.green,
                           ),
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Text('PREP:'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                           Text('25 min'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                         ],
                       ),
                       Column(
                         children: [
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Icon(
                             Icons.timer,
                             size: 14,
                             color: Colors.green,
                           ),
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Text('COOK:'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                           Text('1 hr'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                         ],
                       ),
                       Column(
                         children: [
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Icon(
                             Icons.food_bank,
                             size: 14,
                             color: Colors.green,
                           ),
-                          Container(height: 4,),
+                          Container(
+                            height: 4,
+                          ),
                           Text('FEEDS:'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                           Text('4-6'),
-                          Container(height: 8,),
+                          Container(
+                            height: 8,
+                          ),
                         ],
                       ),
                     ],

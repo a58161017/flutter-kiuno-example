@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class CameraTipView extends StatefulWidget {
   CameraTipView({Key? key}) : super(key: key);
@@ -7,11 +8,20 @@ class CameraTipView extends StatefulWidget {
   CameraTipViewState createState() => CameraTipViewState();
 }
 
-class CameraTipViewState extends State<CameraTipView> {
-  void refresh() {
-    if (mounted) {
-      setState(() => {});
-    }
+class CameraTipViewState extends State<CameraTipView>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,6 +47,19 @@ class CameraTipViewState extends State<CameraTipView> {
             children: [
               Positioned.fill(child: Image.asset('assets/pic/pano.png')),
               Positioned.fill(child: Image.asset('assets/studio_tip.webp')),
+              // Positioned.fill(
+              //   child: Lottie.asset(
+              //     'assets/studio_tip.json',
+              //     controller: _controller,
+              //     onLoaded: (composition) {
+              //       // Configure the AnimationController with the duration of the
+              //       // Lottie file and start the animation.
+              //       _controller
+              //         ..duration = composition.duration
+              //         ..forward();
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

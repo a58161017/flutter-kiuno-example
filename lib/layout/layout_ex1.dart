@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class LayoutExample1Route extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Layout Example',
       'Kiuno\'s layout example1',
       LayoutExample1Widget(),
     );

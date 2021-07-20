@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseRoute extends StatelessWidget {
-  Widget buildMaterialApp(
-      BuildContext context, String appTitle, String appBarTitle, Widget child) {
+  Widget buildAppBar(BuildContext context, String appBarTitle, Widget child) {
     return WillPopScope(
       onWillPop: () => onBackPressed(context),
-      child: MaterialApp(
-        title: appTitle,
-        home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => onBackPressed(context),
-            ),
-            title: Text(appBarTitle),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => onBackPressed(context),
           ),
-          body: child,
+          title: Text(appBarTitle),
         ),
+        body: child,
       ),
     );
   }

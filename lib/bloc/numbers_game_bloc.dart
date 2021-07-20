@@ -7,9 +7,8 @@ class NumbersGameBlocRoute extends BaseRoute {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Numbers Game Bloc',
       'Kiuno\'s numbers game bloc',
       _NumbersGameWidget(),
     );
@@ -88,7 +87,9 @@ class _NumbersGameView extends StatelessWidget {
                   padding: EdgeInsets.all(8),
                   child: ElevatedButton(
                       onPressed: () => context.read<NumbersBloc>().add(
-                          SubmitEvent(myController.text.isEmpty ? -1 : int.parse(myController.text))),
+                          SubmitEvent(myController.text.isEmpty
+                              ? -1
+                              : int.parse(myController.text))),
                       child: Text(
                         'Submit',
                       )),

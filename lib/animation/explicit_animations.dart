@@ -4,22 +4,10 @@ import 'package:flutter_kiuno_example/base.dart';
 class ExplicitAnimationsRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => onBackPressed(context),
-      child: MaterialApp(
-        title: 'Startup Explicit Animations',
-        theme: ThemeData(scaffoldBackgroundColor: Colors.black),
-        home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => onBackPressed(context),
-            ),
-            title: Text('Kiuno\'s explicit animations'),
-          ),
-          body: _ExplicitAnimationsWidget(),
-        ),
-      ),
+    return buildAppBar(
+      context,
+      'Kiuno\'s explicit animations',
+      _ExplicitAnimationsWidget(),
     );
   }
 }
@@ -44,11 +32,20 @@ class _ExplicitAnimationsState extends State<_ExplicitAnimationsWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RotationTransition(
-        alignment: Alignment.center,
-        turns: _controller,
-        child: Image.asset('assets/earth.jpeg'),
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.black,
+        ),
+        child: Center(
+          child: RotationTransition(
+            alignment: Alignment.center,
+            turns: _controller,
+            child: Image.asset('assets/earth.jpeg'),
+          ),
+        ),
       ),
     );
   }

@@ -6,9 +6,8 @@ import '../../base.dart';
 class FindableListViewRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Findable List View',
       'Kiuno\'s findable list view',
       _FindableListViewWidget(),
     );

@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class SwitcherAnimationRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Switcher Animation',
       'Kiuno\'s switcher animation',
       _SwitcherAnimationWidget(),
     );

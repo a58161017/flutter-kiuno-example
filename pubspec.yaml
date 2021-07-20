@@ -37,6 +37,8 @@ dependencies:
   rect_getter: ^1.0.0
   flutter_svg: ^0.22.0
   video_player: ^2.1.10
+  flutter_statusbarcolor: ^0.2.3
+  lottie: ^1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -85,6 +87,8 @@ flutter:
     - assets/pic/pano.png
     - assets/studio_tip.webp
     - assets/studio_tip2.png
+    - assets/studio_tip.zip
+    - assets/studio_tip.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,9 +4,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class AnimationBasicRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Animation Basic',
       'Kiuno\'s animation basic',
       _AnimationBasicWidget(),
     );

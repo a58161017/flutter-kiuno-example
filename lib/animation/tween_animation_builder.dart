@@ -5,9 +5,8 @@ import '../base.dart';
 class TweenAnimationBuilderRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Tween Animation Builder',
       'Kiuno\'s tween animation builder',
       _TweenAnimationBuilderWidget(),
     );

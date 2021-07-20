@@ -9,9 +9,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class ListBasicRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup List Basic',
       'Kiuno\'s list basic',
       _ListBasicWidget(),
     );

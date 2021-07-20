@@ -13,9 +13,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class StatefulEncapsulationRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Stateful Encapsulation',
       'Kiuno\'s stateful encapsulation',
       _Counter(),
     );

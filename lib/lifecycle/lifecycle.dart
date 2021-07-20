@@ -5,9 +5,8 @@ import 'package:flutter_kiuno_example/base.dart';
 class LifecycleRoute extends BaseRoute {
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp(
+    return buildAppBar(
       context,
-      'Startup Lifecycle',
       'Kiuno\'s lifecycle',
       _Lifecycle(),
     );
