@@ -1,13 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
-import 'package:flutter_svg/svg.dart';
-
-part '../view/album_view.dart';
-
-part '../view/record_view.dart';
-
-part '../view/switch_camera_view.dart';
+part of '../../camera_page.dart';
 
 const int RECORD_SECONDS = 60;
 

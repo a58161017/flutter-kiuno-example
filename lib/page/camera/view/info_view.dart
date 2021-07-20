@@ -1,4 +1,5 @@
-part of '../frame/app_bar_frame.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class InfoView extends StatelessWidget {
   @override

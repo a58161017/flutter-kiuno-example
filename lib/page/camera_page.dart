@@ -1,17 +1,29 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_kiuno_example/cubit/camera/countdown_cubit.dart';
 import 'package:flutter_kiuno_example/cubit/camera/flash_cubit.dart';
 import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
-import 'package:flutter_kiuno_example/main.dart';
+import 'package:flutter_kiuno_example/page/camera/view/camera_tip_view.dart';
+import 'package:flutter_kiuno_example/page/preview_page.dart';
+import 'package:path_provider/path_provider.dart';
 
-import 'camera/frame/app_bar_frame.dart';
-import 'camera/frame/action_frame.dart';
+import '../main.dart';
+import 'camera/view/close_view.dart';
 import 'camera/view/countdown_text_view.dart';
+import 'camera/view/countdown_view.dart';
+import 'camera/view/flash_view.dart';
+import 'camera/view/info_view.dart';
+import 'camera/view/album_view.dart';
+import 'camera/view/record_view.dart';
+import 'camera/view/switch_camera_view.dart';
+
+part 'camera/frame/action_frame.dart';
+
+part 'camera/frame/app_bar_frame.dart';
 
 const int COUNTDOWN_SECONDS = 5;
 
@@ -47,10 +59,13 @@ class _CameraState extends State<_CameraWidget>
   late Future<void> _initializeControllerFuture;
 
   GlobalKey<ActionFrameState> _actionFrameKey = GlobalKey();
+  GlobalKey<CameraTipViewState> _cameraTipViewKey = GlobalKey();
 
+  XFile? _videoFile;
   bool _isCountdown = false;
   int _countdownSec = COUNTDOWN_SECONDS;
   Timer? _countdownTimer;
+  bool _isVisibleTip = true;
 
   void _initCamera() {
     try {
@@ -73,7 +88,7 @@ class _CameraState extends State<_CameraWidget>
     _initCamera();
   }
 
-  Future<void> setFlashMode(FlashMode mode) async {
+  Future<void> _setFlashMode(FlashMode mode) async {
     try {
       await _controller.setFlashMode(mode);
     } on CameraException catch (e) {
@@ -85,7 +100,39 @@ class _CameraState extends State<_CameraWidget>
     }
   }
 
-  void startCountdownTimer() {
+  Future<void> _startVideoRecord() async {
+    if (!_controller.value.isInitialized ||
+        _controller.value.isRecordingVideo) {
+      return;
+    }
+    context.read<RecordCubit>().start();
+    _actionFrameKey.currentState?.startRecordAnimation();
+
+    try {
+      await _controller.startVideoRecording();
+    } on CameraException catch (e) {
+      debugPrint('Error: ${e.code}\n${e.description}');
+    }
+    return;
+  }
+
+  Future<void> _stopVideoRecord() async {
+    if (!_controller.value.isRecordingVideo) {
+      return null;
+    }
+    _actionFrameKey.currentState?.stopRecordAnimation();
+    context.read<RecordCubit>().stop();
+
+    try {
+      await _controller.stopVideoRecording().then((file) => _videoFile = file);
+      debugPrint('videoPath: ${_videoFile!.path}');
+    } on CameraException catch (e) {
+      debugPrint('Error: ${e.code}\n${e.description}');
+      return null;
+    }
+  }
+
+  void _startCountdownTimer() {
     if (_isCountdown) return;
     setState(() {
       _countdownSec = COUNTDOWN_SECONDS;
@@ -99,8 +146,7 @@ class _CameraState extends State<_CameraWidget>
             _isCountdown = false;
             timer.cancel();
           });
-          context.read<RecordCubit>().start();
-          _actionFrameKey.currentState?.startRecordAnimation();
+          _startVideoRecord();
         } else {
           setState(() {
             _countdownSec--;
@@ -145,6 +191,17 @@ class _CameraState extends State<_CameraWidget>
                       listener: this,
                     ),
                   ),
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Visibility(
+                        visible: _isVisibleTip,
+                        child: CameraTipView(
+                          key: _cameraTipViewKey,
+                        ),
+                      ),
+                    ),
+                  ),
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -179,7 +236,6 @@ class _CameraState extends State<_CameraWidget>
               ),
             );
           } else {
-            debugPrint('FutureBuilder -> ConnectionState.done -> no init');
             return Stack(
               children: [
                 Positioned.fill(
@@ -242,39 +298,47 @@ class _CameraState extends State<_CameraWidget>
     switch (context.read<FlashCubit>().state) {
       case FLASH_OFF:
         context.read<FlashCubit>().on();
-        setFlashMode(FlashMode.torch);
+        _setFlashMode(FlashMode.torch);
         break;
       case FLASH_ON:
         context.read<FlashCubit>().auto();
-        setFlashMode(FlashMode.auto);
+        _setFlashMode(FlashMode.auto);
         break;
       case FLASH_AUTO:
         context.read<FlashCubit>().off();
-        setFlashMode(FlashMode.off);
+        _setFlashMode(FlashMode.off);
         break;
     }
   }
 
   @override
-  void onInfoClicked() {}
+  void onInfoClicked() {
+    setState(() => _isVisibleTip = !_isVisibleTip);
+  }
 
   @override
-  void onAlbumClicked() {}
+  void onAlbumClicked() {
+    if (_videoFile != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PreviewPage(filePath: _videoFile!.path),
+        ),
+      );
+    }
+  }
 
   @override
   void onRecordClicked() {
     if (context.read<RecordCubit>().state) {
-      _actionFrameKey.currentState?.stopRecordAnimation();
-      context.read<RecordCubit>().stop();
+      _stopVideoRecord();
     } else {
       var countdownMode = context.read<CountdownCubit>().state;
       switch (countdownMode) {
         case COUNTDOWN_OFF:
-          context.read<RecordCubit>().start();
-          _actionFrameKey.currentState?.startRecordAnimation();
+          _startVideoRecord();
           break;
         case COUNTDOWN_FIVE_SECONDS:
-          startCountdownTimer();
+          _startCountdownTimer();
           break;
       }
     }

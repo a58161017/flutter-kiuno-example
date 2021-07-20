@@ -1,4 +1,5 @@
-part of '../frame/app_bar_frame.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 const int COUNTDOWN_OFF = 0;
 const int COUNTDOWN_FIVE_SECONDS = 1;

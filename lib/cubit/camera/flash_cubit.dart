@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_kiuno_example/page/camera/frame/app_bar_frame.dart';
+import 'package:flutter_kiuno_example/page/camera/view/flash_view.dart';
 
 class FlashCubit extends Cubit<int> {
   FlashCubit() : super(FLASH_OFF);

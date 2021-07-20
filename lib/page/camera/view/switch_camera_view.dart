@@ -1,4 +1,5 @@
-part of '../frame/action_frame.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SwitchCameraView extends StatelessWidget {
   @override

@@ -1,16 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_kiuno_example/cubit/camera/countdown_cubit.dart';
-import 'package:flutter_kiuno_example/cubit/camera/flash_cubit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-part '../view/close_view.dart';
-
-part '../view/countdown_view.dart';
-
-part '../view/flash_view.dart';
-
-part '../view/info_view.dart';
+part of '../../camera_page.dart';
 
 abstract class OnAppBarFrameListener {
   void onCloseClicked();
