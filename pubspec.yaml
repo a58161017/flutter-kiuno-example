@@ -85,10 +85,7 @@ flutter:
     - assets/timer_off.svg
     - assets/timer_5s.svg
     - assets/pic/pano.png
-    - assets/studio_tip.webp
-    - assets/studio_tip2.png
-    - assets/studio_tip.zip
-    - assets/studio_tip.json
+    - assets/phone_pano.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

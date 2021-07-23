@@ -1,4 +1,4 @@
-part of '../../camera_page.dart';
+part of '../camera_page.dart';
 
 const int RECORD_SECONDS = 60;
 

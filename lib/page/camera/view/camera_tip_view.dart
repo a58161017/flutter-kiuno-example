@@ -46,20 +46,20 @@ class CameraTipViewState extends State<CameraTipView>
           child: Stack(
             children: [
               Positioned.fill(child: Image.asset('assets/pic/pano.png')),
-              Positioned.fill(child: Image.asset('assets/studio_tip.webp')),
-              // Positioned.fill(
-              //   child: Lottie.asset(
-              //     'assets/studio_tip.json',
-              //     controller: _controller,
-              //     onLoaded: (composition) {
-              //       // Configure the AnimationController with the duration of the
-              //       // Lottie file and start the animation.
-              //       _controller
-              //         ..duration = composition.duration
-              //         ..forward();
-              //     },
-              //   ),
-              // ),
+              // Positioned.fill(child: Image.asset('assets/studio_tip.webp')),
+              Positioned.fill(
+                child: Lottie.asset(
+                  'assets/phone_pano.json',
+                  controller: _controller,
+                  onLoaded: (composition) {
+                    // Configure the AnimationController with the duration of the
+                    // Lottie file and start the animation.
+                    _controller
+                      ..duration = composition.duration
+                      ..forward();
+                  },
+                ),
+              ),
             ],
           ),
         ),

@@ -31,7 +31,7 @@ import 'layout/list/nested_list_view3.dart';
 import 'layout/list/view_holder.dart';
 import 'lifecycle/lifecycle.dart';
 import 'layout/list/list_basic.dart';
-import 'page/camera_page.dart';
+import 'page/camera/camera_page.dart';
 
 late List<_TitleItem> _titleList;
 late List<_RouteItem> _routeList;

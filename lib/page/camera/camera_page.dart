@@ -7,23 +7,22 @@ import 'package:flutter_kiuno_example/cubit/camera/countdown_cubit.dart';
 import 'package:flutter_kiuno_example/cubit/camera/flash_cubit.dart';
 import 'package:flutter_kiuno_example/cubit/camera/record_cubit.dart';
 import 'package:flutter_kiuno_example/page/camera/view/camera_tip_view.dart';
-import 'package:flutter_kiuno_example/page/preview_page.dart';
+import 'package:flutter_kiuno_example/page/camera/preview_page.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-import '../main.dart';
-import 'camera/view/close_view.dart';
-import 'camera/view/countdown_text_view.dart';
-import 'camera/view/countdown_view.dart';
-import 'camera/view/flash_view.dart';
-import 'camera/view/info_view.dart';
-import 'camera/view/album_view.dart';
-import 'camera/view/permission_tip_view.dart';
-import 'camera/view/record_view.dart';
-import 'camera/view/switch_camera_view.dart';
+import '../../main.dart';
+import 'view/close_view.dart';
+import 'view/countdown_text_view.dart';
+import 'view/countdown_view.dart';
+import 'view/flash_view.dart';
+import 'view/info_view.dart';
+import 'view/album_view.dart';
+import 'view/permission_tip_view.dart';
+import 'view/record_view.dart';
+import 'view/switch_camera_view.dart';
 
-part 'camera/frame/action_frame.dart';
-
-part 'camera/frame/app_bar_frame.dart';
+part 'frame/action_frame.dart';
+part 'frame/app_bar_frame.dart';
 
 const int COUNTDOWN_SECONDS = 5;
 

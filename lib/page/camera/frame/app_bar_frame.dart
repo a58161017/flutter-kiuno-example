@@ -1,4 +1,4 @@
-part of '../../camera_page.dart';
+part of '../camera_page.dart';
 
 abstract class OnAppBarFrameListener {
   void onCloseClicked();
