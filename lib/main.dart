@@ -17,6 +17,7 @@ import 'package:flutter_kiuno_example/layout/layout_ex2.dart';
 import 'package:flutter_kiuno_example/layout/layout_ex3.dart';
 import 'package:flutter_kiuno_example/layout/list/combination_list.dart';
 import 'package:flutter_kiuno_example/layout/list/mutil_list.dart';
+import 'package:flutter_kiuno_example/page/aspect_ratio_page.dart';
 import 'package:flutter_kiuno_example/state/stateful_basic.dart';
 import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
@@ -36,8 +37,9 @@ import 'page/camera/camera_page.dart';
 late List<_TitleItem> _titleList;
 late List<_RouteItem> _routeList;
 List<CameraDescription> cameras = [];
+Size? safeAreaSize;
 
-Future<void> main() async {
+void main() {
   /*
    * Causes objects like RenderPointerListener to flash while they are being
    * tapped. This can be useful to see how large the hit box is, e.g.
@@ -49,12 +51,12 @@ Future<void> main() async {
   // Bloc.observer = BlocObserver() // Unregister GlobalBlocObserver
 
   // Fetch the available cameras before initializing the app.
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    debugPrint('e.code: ${e.code}, e.description: ${e.description}');
-  }
+  // try {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   cameras = await availableCameras();
+  // } on CameraException catch (e) {
+  //   debugPrint('e.code: ${e.code}, e.description: ${e.description}');
+  // }
 
   initRouteList();
   runApp(MyApp());
@@ -197,6 +199,10 @@ void initRouteList() {
         headerValue: TITLE_OTHER,
         routeName: 'small_steel_ball_page',
         route: SmallSteelBallRoute()),
+    _RouteItem(
+        headerValue: TITLE_OTHER,
+        routeName: 'aspect_ratio_page',
+        route: AspectRatioPage()),
   ];
 }
 
@@ -281,6 +287,14 @@ class _MyHomeState extends State<MyHomeRoute> {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                safeAreaSize = constraints.biggest;
+                return Container();
+              },
+            ),
+          ),
           SingleChildScrollView(
             child: Container(
               child: _buildExpansionPanelList(),

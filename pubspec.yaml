@@ -86,6 +86,7 @@ flutter:
     - assets/timer_5s.svg
     - assets/pic/pano.png
     - assets/phone_pano.json
+    - assets/preview_pic.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
