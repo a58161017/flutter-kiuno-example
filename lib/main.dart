@@ -19,6 +19,7 @@ import 'package:flutter_kiuno_example/layout/list/combination_list.dart';
 import 'package:flutter_kiuno_example/layout/list/mutil_list.dart';
 import 'package:flutter_kiuno_example/page/aspect_ratio_page.dart';
 import 'package:flutter_kiuno_example/page/json_parse_page.dart';
+import 'package:flutter_kiuno_example/page/location_page.dart';
 import 'package:flutter_kiuno_example/state/stateful_basic.dart';
 import 'package:flutter_kiuno_example/state/stateful_encapsulation.dart';
 import 'package:flutter_kiuno_example/bloc/numbers_game_bloc.dart';
@@ -208,6 +209,10 @@ void initRouteList() {
         headerValue: TITLE_OTHER,
         routeName: 'json_parse_page',
         route: JsonParsePage()),
+    _RouteItem(
+        headerValue: TITLE_OTHER,
+        routeName: 'location_page',
+        route: LocationPage()),
   ];
 }
 
