@@ -18,6 +18,9 @@ import 'package:flutter_kiuno_example/layout/layout_ex3.dart';
 import 'package:flutter_kiuno_example/layout/list/combination_list.dart';
 import 'package:flutter_kiuno_example/layout/list/mutil_list.dart';
 import 'package:flutter_kiuno_example/page/aspect_ratio_page.dart';
+import 'package:flutter_kiuno_example/page/blow_fish_page.dart';
+import 'package:flutter_kiuno_example/page/fast_login_page.dart';
+import 'package:flutter_kiuno_example/page/go_global_page.dart';
 import 'package:flutter_kiuno_example/page/json_parse_page.dart';
 import 'package:flutter_kiuno_example/page/location_page.dart';
 import 'package:flutter_kiuno_example/state/stateful_basic.dart';
@@ -70,6 +73,7 @@ const String TITLE_SCROLLVIEW = 'ScrollView';
 const String TITLE_ANIMATION = 'Animation';
 const String TITLE_BLOC = 'Bloc';
 const String TITLE_CAMERA = 'Camera';
+const String TITLE_ENCRYPT_DECRYPT = 'EncryptDecrypt';
 const String TITLE_OTHER = 'Other';
 
 void initRouteList() {
@@ -80,6 +84,7 @@ void initRouteList() {
     _TitleItem(headerValue: TITLE_ANIMATION),
     _TitleItem(headerValue: TITLE_BLOC),
     _TitleItem(headerValue: TITLE_CAMERA),
+    _TitleItem(headerValue: TITLE_ENCRYPT_DECRYPT),
     _TitleItem(headerValue: TITLE_OTHER),
   ];
 
@@ -192,6 +197,21 @@ void initRouteList() {
       headerValue: TITLE_CAMERA,
       routeName: 'camera',
       route: CameraPage(),
+    ),
+    _RouteItem(
+      headerValue: TITLE_ENCRYPT_DECRYPT,
+      routeName: 'blow_fish_page',
+      route: BlowFishPage(),
+    ),
+    _RouteItem(
+      headerValue: TITLE_ENCRYPT_DECRYPT,
+      routeName: 'fast_login_page',
+      route: FastLoginPage(),
+    ),
+    _RouteItem(
+      headerValue: TITLE_ENCRYPT_DECRYPT,
+      routeName: 'get_go_global_page',
+      route: GoGlobalPage(),
     ),
     _RouteItem(
         headerValue: TITLE_OTHER,
